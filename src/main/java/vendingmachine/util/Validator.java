@@ -15,12 +15,6 @@ public final class Validator {
         }
     }
 
-    public static void validatePriceNumberFormat(String input) {
-        if (!input.matches(NUMBER_FORMAT)) {
-            throw new IllegalArgumentException(ErrorMessage.PRICE_NUMBER_FORMAT_ERROR.getErrorMessage());
-        }
-    }
-
     public static void validateMachineItemsFormat(String readItems) {
         if (!readItems.matches(INPUT_FORMAT)) {
             throw new IllegalArgumentException(ErrorMessage.INPUT_FORMAT_ERROR.getErrorMessage());
