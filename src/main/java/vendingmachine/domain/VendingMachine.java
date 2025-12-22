@@ -1,9 +1,12 @@
 package vendingmachine.domain;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import vendingmachine.constant.Coin;
 import vendingmachine.constant.ErrorMessage;
 import vendingmachine.generator.RandomCoinGenerator;
@@ -57,5 +60,28 @@ public class VendingMachine {
     public void addItems(String name, int price, int count) {
         Item item = new Item(name, price);
         items.put(item, count);
+    }
+
+    public boolean isPossiblePurchase(InsertedMoney insertedMoney) {
+        int minPrice = getMinPriceOfItem();
+        if (insertedMoney.getAmount() >= minPrice) {
+            return true;
+        }
+
+        return allIsSoldOut();
+    }
+
+    private int getMinPriceOfItem() {
+        List<Item> items = new ArrayList<>(this.items.keySet());
+
+        return items.stream()
+                .map(Item::getPrice)
+                .min(Integer::compare)
+                .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_MIN_PRICE_ERROR.getErrorMessage()));
+    }
+
+    private boolean allIsSoldOut() {
+        return new ArrayList<>(items.values())
+                .stream().noneMatch(count -> count > 0);
     }
 }

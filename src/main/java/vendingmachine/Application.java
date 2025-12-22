@@ -41,8 +41,11 @@ public class Application {
             String readInsertedMoney = InputView.readInsertedMoney();
             int amount = InputParser.parseInsertedMoney(readInsertedMoney);
             insertedMoney = InsertedMoney.fromAmount(amount);
-
         });
+
+        while (vendingMachine.isPossiblePurchase(insertedMoney)) {
+
+        }
     }
 
     private static  <T> T retryOnError(Supplier<T> supplier) {

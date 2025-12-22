@@ -9,9 +9,9 @@ public enum ErrorMessage {
     INPUT_FORMAT_ERROR("입력 형식이 올바르지 않습니다."),
 
     PRICE_MIN_ERROR("가격은 100원 이상이어야 합니다."),
-    PRICE_UNIT_ERROR("가격은 10원 단위여야 합니다.");
+    PRICE_UNIT_ERROR("가격은 10원 단위여야 합니다."),
 
-
+    NO_MIN_PRICE_ERROR("최소 금액이 존재하지 않습니다.");
 
     private static final String ERROR_MESSAGE_PREFIX = "[ERROR] ";
     private final String errorMessage;

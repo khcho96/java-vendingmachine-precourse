@@ -26,4 +26,8 @@ public class InsertedMoney {
         amount -= consumedAmount;
         return amount;
     }
+
+    public int getAmount() {
+        return amount;
+    }
 }
