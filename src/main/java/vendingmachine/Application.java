@@ -1,6 +1,8 @@
 package vendingmachine;
 
+import java.util.EnumMap;
 import java.util.function.Supplier;
+import vendingmachine.constant.Coin;
 import vendingmachine.domain.VendingMachine;
 import vendingmachine.util.InputParser;
 import vendingmachine.view.InputView;
@@ -12,11 +14,14 @@ public class Application {
 
     public static void main(String[] args) {
         // TODO: 프로그램 구현
-        retryOnError(() -> {
+        EnumMap<Coin, Integer> coinCount = retryOnError(() -> {
             String readMachineMoney = InputView.readMachineMoney();
             int money = InputParser.parseMachineMoney(readMachineMoney);
             vendingMachine = VendingMachine.from(money);
+            return vendingMachine.getCoinCount();
         });
+
+        OutputView.printMachineCoins(coinCount);
     }
 
     private static  <T> T retryOnError(Supplier<T> supplier) {
