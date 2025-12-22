@@ -1,11 +1,10 @@
 package vendingmachine.util;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
+import vendingmachine.constant.ErrorMessage;
 
 public final class InputParser {
 
@@ -37,6 +36,10 @@ public final class InputParser {
             int price = NumberConvertor.convertToNumber(order[1]);
             int count = NumberConvertor.convertToNumber(order[2]);
 
+            if (machineItems.containsKey(name)) {
+                throw new IllegalArgumentException(ErrorMessage.ITEM_NAME_UNIQUE_ERROR.getErrorMessage());
+            }
+
             machineItems.put(name, Arrays.asList(price, count));
         }
 
@@ -49,5 +52,11 @@ public final class InputParser {
         Validator.validateAmountNumberFormat(readInsertedMoney);
 
         return NumberConvertor.convertToNumber(readInsertedMoney);
+    }
+
+    public static String parsePurchaseItem(String readPurChaseItem) {
+        readPurChaseItem = readPurChaseItem.trim();
+
+        return readPurChaseItem;
     }
 }

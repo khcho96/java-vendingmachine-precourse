@@ -6,7 +6,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import vendingmachine.constant.Coin;
 import vendingmachine.constant.ErrorMessage;
 import vendingmachine.generator.RandomCoinGenerator;
@@ -15,8 +14,9 @@ public class VendingMachine {
 
     private final EnumMap<Coin, Integer> coinCount;
     private final Map<Item, Integer> items;
+    private InsertedMoney insertedMoney;
 
-    private VendingMachine(EnumMap<Coin, Integer> coinCount) {
+    public VendingMachine(EnumMap<Coin, Integer> coinCount) {
         this.coinCount = coinCount;
         this.items = new HashMap<>();
     }
@@ -46,15 +46,11 @@ public class VendingMachine {
         }
     }
 
-    public boolean isPossibleChange(int amount) {
+    public boolean isPossibleChange() {
         return Arrays.stream(Coin.values())
-                .filter(coin -> coin.getAmount() <= amount)
+                .filter(coin -> coin.getAmount() <= insertedMoney.getAmount())
                 .map(coin -> coin.getAmount() * coinCount.get(coin))
-                .reduce(0, Integer::sum) >= amount;
-    }
-
-    public EnumMap<Coin, Integer> getCoinCount() {
-        return coinCount;
+                .reduce(0, Integer::sum) >= insertedMoney.getAmount();
     }
 
     public void addItems(String name, int price, int count) {
@@ -62,7 +58,7 @@ public class VendingMachine {
         items.put(item, count);
     }
 
-    public boolean isPossiblePurchase(InsertedMoney insertedMoney) {
+    public boolean isPossiblePurchase() {
         int minPrice = getMinPriceOfItem();
         if (insertedMoney.getAmount() >= minPrice) {
             return true;
@@ -83,5 +79,67 @@ public class VendingMachine {
     private boolean allIsSoldOut() {
         return new ArrayList<>(items.values())
                 .stream().noneMatch(count -> count > 0);
+    }
+
+    public int purchaseItem(String purchaseItem) {
+        for (Item item : items.keySet()) {
+            if (item.getName().equals(purchaseItem)) {
+                if (items.get(item) == 0) {
+                    throw new IllegalArgumentException(ErrorMessage.EMPTY_STOCK_ITEM_ERROR.getErrorMessage());
+                }
+
+                items.put(item, items.get(item) - 1);
+
+                return item.getPrice();
+            }
+        }
+        throw new IllegalArgumentException(ErrorMessage.NO_EXIST_ITEM_ERROR.getErrorMessage());
+    }
+
+    public EnumMap<Coin, Integer> getOptimalCoinCount() {
+        EnumMap<Coin, Integer> optimalCoinCount = new EnumMap<>(Coin.class);
+
+        int amount = insertedMoney.getAmount();
+        for (Coin coin : Coin.values()) {
+            int count = amount / coin.getAmount();
+            if (count > 0 && coinCount.get(coin) != 0) {
+                count = computeCount(coin, count);
+                optimalCoinCount.put(coin, count);
+                amount -= coin.getAmount() * count;
+            }
+
+            if (amount < 10) {
+                break;
+            }
+        }
+
+        return optimalCoinCount;
+    }
+
+    private int computeCount(Coin coin, int count) {
+        if (count >= coinCount.get(coin)) {
+            count = coinCount.get(coin);
+        }
+        return count;
+    }
+
+    public void insertMoney(int amount) {
+        insertedMoney = InsertedMoney.fromAmount(amount);
+    }
+
+    public EnumMap<Coin, Integer> getCoinCount() {
+        return new EnumMap<>(coinCount);
+    }
+
+    public InsertedMoney getInsertedMoney() {
+        return insertedMoney;
+    }
+
+    public Map<Item, Integer> getItems() {
+        return items;
+    }
+
+    public void updateCurrentAmount(int purchasePrice) {
+        insertedMoney.updateAmount(purchasePrice);
     }
 }

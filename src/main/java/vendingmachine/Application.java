@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import vendingmachine.constant.Coin;
-import vendingmachine.domain.InsertedMoney;
 import vendingmachine.domain.VendingMachine;
 import vendingmachine.util.InputParser;
 import vendingmachine.view.InputView;
@@ -14,7 +13,6 @@ import vendingmachine.view.OutputView;
 public class Application {
 
     private static VendingMachine vendingMachine;
-    private static InsertedMoney insertedMoney;
 
     public static void main(String[] args) {
         // TODO: 프로그램 구현
@@ -40,15 +38,27 @@ public class Application {
         retryOnError(() -> {
             String readInsertedMoney = InputView.readInsertedMoney();
             int amount = InputParser.parseInsertedMoney(readInsertedMoney);
-            insertedMoney = InsertedMoney.fromAmount(amount);
+
+            vendingMachine.insertMoney(amount);
         });
 
-        while (vendingMachine.isPossiblePurchase(insertedMoney)) {
-
+        while (vendingMachine.isPossiblePurchase()) {
+            // 7번
+            OutputView.printCurrentAmount(vendingMachine.getInsertedMoney().getAmount());
+            retryOnError(() -> {
+                String readPurChaseItem = InputView.readPurchaseItem();
+                String purchaseItem = InputParser.parsePurchaseItem(readPurChaseItem);
+                int purchasePrice = vendingMachine.purchaseItem(purchaseItem);
+                vendingMachine.updateCurrentAmount(purchasePrice);
+            });
         }
+
+        // 8번
+        OutputView.printCurrentAmount(vendingMachine.getInsertedMoney().getAmount());
+        OutputView.printChangeCoins(vendingMachine.getOptimalCoinCount());
     }
 
-    private static  <T> T retryOnError(Supplier<T> supplier) {
+    private static <T> T retryOnError(Supplier<T> supplier) {
         while (true) {
             try {
                 return supplier.get();

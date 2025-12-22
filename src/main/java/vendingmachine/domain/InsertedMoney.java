@@ -22,9 +22,8 @@ public class InsertedMoney {
         }
     }
 
-    public int updateAmount(int consumedAmount) {
-        amount -= consumedAmount;
-        return amount;
+    public void updateAmount(int purchasePrice) {
+        amount -= purchasePrice;
     }
 
     public int getAmount() {
