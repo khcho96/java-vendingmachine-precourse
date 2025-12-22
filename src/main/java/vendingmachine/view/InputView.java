@@ -10,4 +10,14 @@ public class InputView {
         System.out.println(MACHINE_MONEY_REQUEST);
         return Console.readLine();
     }
+
+    public static String readItems() {
+        System.out.println("");
+        return Console.readLine();
+    }
+
+    public static String readMachineItems() {
+        System.out.println("\n상품명과 가격, 수량을 입력해 주세요.");
+        return Console.readLine();
+    }
 }

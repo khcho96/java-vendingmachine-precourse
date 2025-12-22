@@ -2,6 +2,8 @@ package vendingmachine.domain;
 
 import java.util.Arrays;
 import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
 import vendingmachine.constant.Coin;
 import vendingmachine.constant.ErrorMessage;
 import vendingmachine.generator.RandomCoinGenerator;
@@ -9,12 +11,14 @@ import vendingmachine.generator.RandomCoinGenerator;
 public class VendingMachine {
 
     private final EnumMap<Coin, Integer> coinCount;
+    private final Map<Item, Integer> items;
 
     private VendingMachine(EnumMap<Coin, Integer> coinCount) {
         this.coinCount = coinCount;
+        this.items = new HashMap<>();
     }
 
-    public static VendingMachine from(int money) {
+    public static VendingMachine fromMoney(int money) {
         validate(money);
 
         EnumMap<Coin, Integer> count = new EnumMap<>(Coin.class);
@@ -48,5 +52,10 @@ public class VendingMachine {
 
     public EnumMap<Coin, Integer> getCoinCount() {
         return coinCount;
+    }
+
+    public void addItems(String name, int price, int count) {
+        Item item = new Item(name, price);
+        items.put(item, count);
     }
 }

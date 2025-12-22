@@ -1,14 +1,16 @@
 package vendingmachine.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public final class InputParser {
 
-    private static final String DELIMITER = ",";
-    private static final String FIRST_DELIMITER = ",";
-    private static final String SECOND_DELIMITER = "-";
+    private static final String FIRST_DELIMITER = ";";
+    private static final String SECOND_DELIMITER = ",";
 
     private InputParser() {
     }
@@ -21,22 +23,23 @@ public final class InputParser {
         return NumberConvertor.convertToNumber(rawMoney);
     }
 
-//    public static List<String> parseXxx(String rawInput) {
-//        Validator.validateOrder(rawInput);
-//        rawInput = rawInput.strip();
-//
-//        List<String> orderMenus = new ArrayList<>();
-//        String[] split = rawInput.split(FIRST_DELIMITER);
-//        for (String s : split) {
-//            String[] order = s.strip().split(SECOND_DELIMITER);
-//            String name = order[0];
-//            int count = NumberConvertor.convertToNumber(order[1]);
-//
-//            for (int i = 0; i < count; i++) {
-//                orderMenus.add(name);
-//            }
-//        }
-//
-//        return orderMenus;
-//    }
+    public static Map<String, List<Integer>> parseMachineItems(String readItems) {
+        Validator.validateMachineItemsFormat(readItems);
+        readItems = readItems.trim();
+
+        Map<String, List<Integer>> machineItems = new HashMap<>();
+
+        String[] split = readItems.split(FIRST_DELIMITER);
+        for (String s : split) {
+            String[] order = s.replace("[","").replace("]", "")
+                    .trim().split(SECOND_DELIMITER);
+            String name = order[0];
+            int price = NumberConvertor.convertToNumber(order[1]);
+            int count = NumberConvertor.convertToNumber(order[2]);
+
+            machineItems.put(name, Arrays.asList(price, count));
+        }
+
+        return machineItems;
+    }
 }

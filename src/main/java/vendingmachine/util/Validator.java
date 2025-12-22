@@ -4,7 +4,7 @@ import vendingmachine.constant.ErrorMessage;
 
 public final class Validator {
 
-    private static final String CSV_FORMAT = "^ *([가-힣a-zA-Z]+-\\d+)+ *(, *([가-힣]+-\\d+)+ *)*$";
+    private static final String INPUT_FORMAT = "^ *(\\[[가-힣]+,\\d+,\\d+]) *(; *(\\[[가-힣]+,\\d+,\\d+])+ *)*$";
     private static final String NUMBER_FORMAT = "\\d+";
 
     private Validator() {}
@@ -21,9 +21,9 @@ public final class Validator {
         }
     }
 
-//    public static void validateCsvFormat(String input) {
-//        if (!input.matches(CSV_FORMAT)) {
-//            throw new IllegalArgumentException(CSV_FORMAT_ERROR.getErrorMessage());
-//        }
-//    }
+    public static void validateMachineItemsFormat(String readItems) {
+        if (!readItems.matches(INPUT_FORMAT)) {
+            throw new IllegalArgumentException(ErrorMessage.INPUT_FORMAT_ERROR.getErrorMessage());
+        }
+    }
 }
