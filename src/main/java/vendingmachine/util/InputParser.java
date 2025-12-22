@@ -42,4 +42,12 @@ public final class InputParser {
 
         return machineItems;
     }
+
+    public static int parseInsertedMoney(String readInsertedMoney) {
+        readInsertedMoney = readInsertedMoney.trim();
+
+        Validator.validateAmountNumberFormat(readInsertedMoney);
+
+        return NumberConvertor.convertToNumber(readInsertedMoney);
+    }
 }
