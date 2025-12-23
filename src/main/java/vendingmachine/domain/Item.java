@@ -4,6 +4,9 @@ import vendingmachine.constant.ErrorMessage;
 
 public class Item {
 
+    private static final int UNIT = 10;
+    private static final int MIN_PRICE = 100;
+
     private final String name;
     private final int price;
 
@@ -20,13 +23,13 @@ public class Item {
     }
 
     private static void validateUnit(int price) {
-        if (price % 10 != 0) {
+        if (price % UNIT != 0) {
             throw new IllegalArgumentException(ErrorMessage.PRICE_UNIT_ERROR.getErrorMessage());
         }
     }
 
     private static void validateMin(int price) {
-        if (price < 100) {
+        if (price < MIN_PRICE) {
             throw new IllegalArgumentException(ErrorMessage.PRICE_MIN_ERROR.getErrorMessage());
         }
     }

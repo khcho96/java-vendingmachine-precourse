@@ -12,6 +12,8 @@ import vendingmachine.generator.RandomCoinGenerator;
 
 public class VendingMachine {
 
+    private static final int UNIT = 10;
+
     private final EnumMap<Coin, Integer> coinCount;
     private final Map<Item, Integer> items;
     private InsertedMoney insertedMoney;
@@ -41,16 +43,9 @@ public class VendingMachine {
     }
 
     private static void validate(int money) {
-        if (money % 10 != 0) {
+        if (money % UNIT != 0) {
             throw new IllegalArgumentException(ErrorMessage.AMOUNT_UNIT_ERROR.getErrorMessage());
         }
-    }
-
-    public boolean isPossibleChange() {
-        return Arrays.stream(Coin.values())
-                .filter(coin -> coin.getAmount() <= insertedMoney.getAmount())
-                .map(coin -> coin.getAmount() * coinCount.get(coin))
-                .reduce(0, Integer::sum) >= insertedMoney.getAmount();
     }
 
     public void addItems(String name, int price, int count) {
@@ -108,7 +103,7 @@ public class VendingMachine {
                 amount -= coin.getAmount() * count;
             }
 
-            if (amount < 10) {
+            if (amount < UNIT) {
                 break;
             }
         }
