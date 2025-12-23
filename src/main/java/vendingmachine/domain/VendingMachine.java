@@ -135,10 +135,6 @@ public class VendingMachine {
         return insertedMoney;
     }
 
-    public Map<Item, Integer> getItems() {
-        return items;
-    }
-
     public void updateCurrentAmount(int purchasePrice) {
         insertedMoney.updateAmount(purchasePrice);
     }

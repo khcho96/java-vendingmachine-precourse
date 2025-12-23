@@ -1,13 +1,9 @@
 package vendingmachine.view;
 
-import java.util.Arrays;
 import java.util.EnumMap;
 import vendingmachine.constant.Coin;
 
 public class OutputView {
-
-    private static final String NEW_LINE = System.lineSeparator();
-    private static final String _MESSAGE = "";
 
     public static void printErrorMessage(IllegalArgumentException e) {
         System.out.println(e.getMessage());

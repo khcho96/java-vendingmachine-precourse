@@ -32,18 +32,22 @@ public final class InputParser {
         for (String s : split) {
             String[] order = s.replace("[","").replace("]", "")
                     .trim().split(SECOND_DELIMITER);
-            String name = order[0];
-            int price = NumberConvertor.convertToNumber(order[1]);
-            int count = NumberConvertor.convertToNumber(order[2]);
-
-            if (machineItems.containsKey(name)) {
-                throw new IllegalArgumentException(ErrorMessage.ITEM_NAME_UNIQUE_ERROR.getErrorMessage());
-            }
-
-            machineItems.put(name, Arrays.asList(price, count));
+            parseDetails(order, machineItems);
         }
 
         return machineItems;
+    }
+
+    private static void parseDetails(String[] order, Map<String, List<Integer>> machineItems) {
+        String name = order[0];
+        int price = NumberConvertor.convertToNumber(order[1]);
+        int count = NumberConvertor.convertToNumber(order[2]);
+
+        if (machineItems.containsKey(name)) {
+            throw new IllegalArgumentException(ErrorMessage.ITEM_NAME_UNIQUE_ERROR.getErrorMessage());
+        }
+
+        machineItems.put(name, Arrays.asList(price, count));
     }
 
     public static int parseInsertedMoney(String readInsertedMoney) {
