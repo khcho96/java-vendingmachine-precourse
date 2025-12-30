@@ -55,11 +55,7 @@ public class VendingMachine {
 
     public boolean isPossiblePurchase() {
         int minPrice = getMinPriceOfItem();
-        if (insertedMoney.getAmount() >= minPrice) {
-            return true;
-        }
-
-        return allIsSoldOut();
+        return insertedMoney.getAmount() >= minPrice && insertedMoney.getAmount() != 0 && isNotSoldOut();
     }
 
     private int getMinPriceOfItem() {
@@ -71,9 +67,9 @@ public class VendingMachine {
                 .orElseThrow(() -> new IllegalArgumentException(ErrorMessage.NO_MIN_PRICE_ERROR.getErrorMessage()));
     }
 
-    private boolean allIsSoldOut() {
+    private boolean isNotSoldOut() {
         return new ArrayList<>(items.values())
-                .stream().noneMatch(count -> count > 0);
+                .stream().anyMatch(count -> count > 0);
     }
 
     public int purchaseItem(String purchaseItem) {

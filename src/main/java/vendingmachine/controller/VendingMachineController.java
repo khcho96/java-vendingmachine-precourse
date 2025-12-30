@@ -37,7 +37,7 @@ public class VendingMachineController {
     }
 
     private EnumMap<Coin, Integer> setVendingMachine() {
-        return retryOnError(() -> {
+        return retryUntilSuccess(() -> {
             String readMachineMoney = InputView.readMachineMoney();
             int money = InputParser.parseMachineMoney(readMachineMoney);
             return vendingMachineService.setVendingMachine(money);
@@ -45,7 +45,7 @@ public class VendingMachineController {
     }
 
     private void addItemsInVendingMachine() {
-        retryOnError(() -> {
+        retryUntilSuccess(() -> {
             String readItems = InputView.readMachineItems();
             Map<String, List<Integer>> machineItems = InputParser.parseMachineItems(readItems);
             vendingMachineService.addItemsInVendingMachine(machineItems);
@@ -53,7 +53,7 @@ public class VendingMachineController {
     }
 
     private void purchaseItems() {
-        retryOnError(() -> {
+        retryUntilSuccess(() -> {
             String readPurChaseItem = InputView.readPurchaseItem();
             String purchaseItem = InputParser.parsePurchaseItem(readPurChaseItem);
             vendingMachineService.purchaseItems(purchaseItem);
@@ -61,7 +61,7 @@ public class VendingMachineController {
     }
 
     private void insertMoney() {
-        retryOnError(() -> {
+        retryUntilSuccess(() -> {
             String readInsertedMoney = InputView.readInsertedMoney();
             int amount = InputParser.parseInsertedMoney(readInsertedMoney);
 
@@ -69,7 +69,7 @@ public class VendingMachineController {
         });
     }
 
-    private <T> T retryOnError(Supplier<T> supplier) {
+    private <T> T retryUntilSuccess(Supplier<T> supplier) {
         while (true) {
             try {
                 return supplier.get();
@@ -79,7 +79,7 @@ public class VendingMachineController {
         }
     }
 
-    private void retryOnError(Runnable runnable) {
+    private void retryUntilSuccess(Runnable runnable) {
         while (true) {
             try {
                 runnable.run();
